@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Celebrating Source Code!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body class="min-h-screen overflow-hidden">
+    <div class="min-h-screen w-full flex flex-col items-center justify-center text-center px-4 py-16 bg-gradient-to-br from-purple-500 via-pink-500 to-yellow-500">
+        <div class="max-w-2xl mx-auto relative z-10">
+            <div class="floating mb-8">
+                <h1 class="text-5xl md:text-7xl font-bold text-white mb-6">🎉 Celebrating Source Code!</h1>
+                <p class="text-xl md:text-2xl text-white opacity-90 mb-8">Welcome to my coding journey! Get ready for daily source codes of fun projects in different programming languages!</p>
+            </div>
+            
+            <div class="mb-8 text-white">
+                <p class="text-lg mb-4">Follow me for more:</p>
+                <div class="flex justify-center space-x-6">
+                    <a href="https://sourcecode-1.web.app" target="_blank" class="hover:underline">Website: link in bio.</a>
+                    <a href="https://tiktok.com/@source.code.shaheerdev" target="_blank" class="hover:underline">TikTok: @source.code.shaheerdev</a>
+                </div>
+            </div>
+        </div>
+        
+        <canvas id="confetti-canvas" class="absolute top-0 left-0 w-full h-full pointer-events-none"></canvas>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Confetti canvas setup
+            const canvas = document.getElementById('confetti-canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Set canvas to full screen
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            // Confetti particles
+            const particles = [];
+            const colors = [
+                '#ff0000', '#00ff00', '#0000ff', '#ffff00', 
+                '#ff00ff', '#00ffff', '#ff8800', '#ff0088'
+            ];
+            
+            // Create particles
+            function createParticles() {
+                for (let i = 0; i < 150; i++) {
+                    particles.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height - canvas.height,
+                        size: Math.random() * 10 + 5,
+                        color: colors[Math.floor(Math.random() * colors.length)],
+                        speed: Math.random() * 3 + 2,
+                        angle: Math.random() * 360,
+                        rotation: Math.random() * 0.2 - 0.1,
+                        rotationSpeed: Math.random() * 0.01 - 0.005
+                    });
+                }
+            }
+            
+            // Update and draw particles
+            function updateParticles() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                for (let i = 0; i < particles.length; i++) {
+                    const p = particles[i];
+                    
+                    // Update position
+                    p.y += p.speed;
+                    p.angle += p.rotation;
+                    p.x += Math.sin(p.angle) * 1;
+                    
+                    // Reset particles that go off screen
+                    if (p.y > canvas.height) {
+                        p.y = Math.random() * -50;
+                        p.x = Math.random() * canvas.width;
+                    }
+                    
+                    // Draw particle
+                    ctx.save();
+                    ctx.translate(p.x, p.y);
+                    ctx.rotate(p.rotationSpeed * Date.now() / 1000);
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size);
+                    ctx.restore();
+                }
+                
+                requestAnimationFrame(updateParticles);
+            }
+            
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+            
+            // Start animation
+            createParticles();
+            updateParticles();
+            
+            // Add some extra confetti on button click
+            document.querySelector('a').addEventListener('click', function(e) {
+                e.preventDefault();
+                createParticles();
+                
+                // Redirect after a delay (simulating navigation)
+                setTimeout(() => {
+                    window.location.href = '#';
+                }, 1000);
+            });
+        });
+    </script>
+</body>
+</html>
